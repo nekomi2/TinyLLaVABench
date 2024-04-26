@@ -9,7 +9,7 @@ deepspeed tinyllava/train/train.py \
     --deepspeed ./scripts/tiny_llava/zero3.json \
     --lora_enable True --lora_r 32 --lora_alpha 64 \
     --model_name_or_path bczhou/TinyLLaVA-1.5B \
-    --version phi \
+    --version v1 \
     --data_path $DATA_PATH \
     --image_folder $IMAGE_PATH\
     --vision_tower bczhou/TinyLLaVA-1.5B-SigLIP \
@@ -22,9 +22,9 @@ deepspeed tinyllava/train/train.py \
     --fp16 True \
     --output_dir $OUTPUT_DIR \
     --num_train_epochs 3 \
-    --per_device_train_batch_size 8 \
+    --per_device_train_batch_size 4 \
     --per_device_eval_batch_size 4 \
-    --gradient_accumulation_steps 2 \
+    --gradient_accumulation_steps 4 \
     --evaluation_strategy "no" \
     --save_strategy "steps" \
     --save_steps 50000 \

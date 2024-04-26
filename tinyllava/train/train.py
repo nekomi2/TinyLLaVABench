@@ -67,7 +67,8 @@ def train():
             model_args.model_name_or_path,
             cache_dir=training_args.cache_dir,
             **bnb_model_from_pretrained_args,
-            attn_implementation="flash_attention_2",
+            # attn_implementation="flash_attention_2",
+            attn_implementation="eager",
             torch_dtype=compute_dtype
         )
     else:
