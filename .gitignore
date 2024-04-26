@@ -54,3 +54,6 @@ __pycache__
 .idea/*
 playground/
 # TinyLLaVABench
+
+tinyllava/datasets/flickr/image/*
+wandb/*
