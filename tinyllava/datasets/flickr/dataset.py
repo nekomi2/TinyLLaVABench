@@ -10,7 +10,6 @@ import os
 ds = load_dataset("nlphuji/flickr30k")
 
 # Paths for storing images and JSON data
-flickr_image_path = 'datasets/flickr/image'
 flickr_data_path = 'datasets/flickr/flickr30k_captions.json'
 
 # Description prompts (the same as provided by you)
@@ -40,12 +39,12 @@ for sample in tqdm.tqdm(ds['test']):
     
     # Save the image to a specified path
     image = sample['image']
-    image.save(os.path.join(flickr_image_path, f'{uuid}.jpg'))
+    image.save(f'{uuid}.jpg')
     
     # Create conversation based on random description and the provided captions
     conversations = [
         {"from": "human", "value": "<image>\n" + random.choice(description_list)},
-        {"from": "gpt", "value": sample['caption']}
+        {"from": "gpt", "value": sample['caption'][0]}
     ]
     sample_dict['conversations'] = conversations
     flickr_data.append(sample_dict)
