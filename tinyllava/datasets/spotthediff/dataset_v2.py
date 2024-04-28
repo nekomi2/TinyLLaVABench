@@ -8,10 +8,6 @@ import json
 
 # Define the URL and output file
 current_file_dir = os.path.dirname(__file__)
-url = 'https://drive.google.com/uc?id=1OVb4_3Uec_xbyUk90aWC6LFpKsIOtR7v'
-output = 'resized_images.zip'
-target_directory = os.path.join(current_file_dir, 'images')
-
 # Paths for storing images and JSON data
 spotdiff_image_path = os.path.join(current_file_dir, 'images')
 spotdiff_data_path = os.path.join(current_file_dir, 'spotthediff.json')
@@ -40,18 +36,16 @@ def process_data(data_path, output_path):
         data = json.load(f)
         spotdiff_data = []
         for sample in tqdm.tqdm(data):
-            sample_dict = {
-                'id': sample['img_id'],
-                'image': f'{sample["img_id"]}.png'
-            }
-            sample_dict['conversations'] = [
-                {"from": "human", "value": "<image>\n" + random.choice(description_list)},
-                {"from": "gpt", "value": '\n'.join(sample['sentences'])}
-            ]
-            if sample_dict['conversations'][1]['value'] == "":
-                sample_dict['conversations'][1]['value'] = 'There are no differences between the images.'
-                
-            spotdiff_data.append(sample_dict)
+            for sentence in sample['sentences']:
+                sample_dict = {
+                    'id': sample['img_id'],
+                    'image': f'{sample["img_id"]}.png'
+                }
+                sample_dict['conversations'] = [
+                    {"from": "human", "value": "<image>\n" + random.choice(description_list)},
+                    {"from": "gpt", "value": sentence if sentence.strip() != "" else 'There are no differences between the images.'}
+                ]
+                spotdiff_data.append(sample_dict)
 
     # Dump data to a JSON file
     with open(output_path, 'w') as f:
@@ -60,20 +54,6 @@ def process_data(data_path, output_path):
 
 # Process each dataset
 if __name__ == '__main__':
-    # Check if the directory exists and has files
-    if not os.path.exists(target_directory) or not os.listdir(f'{target_directory}/resized_images'):
-        # Download the file
-        gdown.download(url, output, quiet=False)
-        print('saving images...')
-        # Unzip the file into the 'images' directory
-        with zipfile.ZipFile(output, 'r') as zip_ref:
-            zip_ref.extractall(target_directory)
-        print('Images saved successfully.')
-        # Optionally, remove the zip file after extraction
-        os.remove(output)
-    else:
-        print(f"Directory '{target_directory}' already exists and is not empty.")
-
-    process_data(train_data_path, os.path.join(current_file_dir, 'spotthediff_train.json'))
-    process_data(val_data_path, os.path.join(current_file_dir, 'spotthediff_val.json'))
-    process_data(test_data_path, os.path.join(current_file_dir, 'spotthediff_test.json'))
+    process_data(train_data_path, os.path.join(current_file_dir, 'spotthediff_train_v2.json'))
+    # process_data(val_data_path, os.path.join(current_file_dir, 'spotthediff_val.json'))
+    # process_data(test_data_path, os.path.join(current_file_dir, 'spotthediff_test.json'))
