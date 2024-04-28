@@ -61,8 +61,11 @@ with open(train_data_path, 'r') as f:
         }
         sample_dict['conversations'] = [
             {"from": "human", "value": "<image>\n" + random.choice(description_list)},
-            {"from": "gpt", "value": '\n'.join(sample['sentences'] if sample['sentences'] else 'The images are the same!')}
+            {"from": "gpt", "value": '\n'.join(sample['sentences'])}
         ]
+        if sample_dict['conversations'][1]['value'] == "":
+            sample_dict['conversations'][1]['value'] = 'There are no differences between the images.'
+            
         spotdiff_data.append(sample_dict)
 
 # Dump data to a JSON file
