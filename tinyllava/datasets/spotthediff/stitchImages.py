@@ -46,7 +46,7 @@ if __name__ == "__main__":
     train_data_path = os.path.join(current_file_dir, "spotthediff_train.json")
     val_data_path = os.path.join(current_file_dir, "spotthediff_val.json")
     test_data_path = os.path.join(current_file_dir, "spotthediff_test.json")
-    stitch_images_for_dataset(train_data_path)
+    # stitch_images_for_dataset(train_data_path)
     stitch_images_for_dataset(val_data_path)
     stitch_images_for_dataset(test_data_path)
     
