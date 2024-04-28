@@ -25,7 +25,7 @@ def stitch_images(image_id, source_folder=os.path.join(current_file_dir, 'images
     new_img.paste(img2, (img1.width, 0))
 
     # Save the new image
-    new_img.save(os.path.join(target_folder, f'{image_id}_stitched.png'))
+    new_img.save(os.path.join(target_folder, f'{image_id}.png'))
 
 image_ids = []
 if not os.path.exists(os.path.join(current_file_dir, 'images/stitched')):

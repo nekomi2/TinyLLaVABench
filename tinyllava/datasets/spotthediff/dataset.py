@@ -13,14 +13,14 @@ output = 'resized_images.zip'
 target_directory = os.path.join(current_file_dir, 'images')
 
 # Check if the directory exists and has files
-if not os.path.exists(target_directory) or not os.listdir(target_directory):
+if not os.path.exists(target_directory) or not os.listdir(f'{target_directory}/resized_images'):
     # Download the file
     gdown.download(url, output, quiet=False)
-
+    print('saving images...')
     # Unzip the file into the 'images' directory
     with zipfile.ZipFile(output, 'r') as zip_ref:
         zip_ref.extractall(target_directory)
-
+    print('Images saved successfully.')
     # Optionally, remove the zip file after extraction
     os.remove(output)
 else:
@@ -51,6 +51,7 @@ spotdiff_data = []
 
 # Process the dataset
 # read the train data
+print('generating json...')
 with open(train_data_path, 'r') as f:
     train_data = json.load(f)
     for sample in tqdm.tqdm(train_data):
@@ -60,7 +61,7 @@ with open(train_data_path, 'r') as f:
         }
         sample_dict['conversations'] = [
             {"from": "human", "value": "<image>\n" + random.choice(description_list)},
-            {"from": "gpt", "value": '\n'.join(sample['sentences'])}
+            {"from": "gpt", "value": '\n'.join(sample['sentences'] if sample['sentences'] else 'The images are the same!')}
         ]
         spotdiff_data.append(sample_dict)
 
