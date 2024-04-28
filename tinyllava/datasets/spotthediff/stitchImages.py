@@ -5,9 +5,14 @@ import tqdm
 
 current_file_dir = os.path.dirname(__file__)
 
-def stitch_images(image_id, source_folder=os.path.join(current_file_dir, 'images/resized_images'), target_folder=os.path.join(current_file_dir, 'images/stitched')):
-    img1_path = os.path.join(source_folder, f'{image_id}.png')
-    img2_path = os.path.join(source_folder, f'{image_id}_2.png')
+
+def stitch_images(
+    image_id,
+    source_folder=os.path.join(current_file_dir, "images/resized_images"),
+    target_folder=os.path.join(current_file_dir, "images/stitched"),
+):
+    img1_path = os.path.join(source_folder, f"{image_id}.png")
+    img2_path = os.path.join(source_folder, f"{image_id}_2.png")
 
     # Open the images
     img1 = Image.open(img1_path)
@@ -18,21 +23,22 @@ def stitch_images(image_id, source_folder=os.path.join(current_file_dir, 'images
 
     # Create a new image with the combined width and the maximum height
     total_width = img1.width + img2.width
-    new_img = Image.new('RGB', (total_width, max_height))
+    new_img = Image.new("RGB", (total_width, max_height))
 
     # Paste the images into the new image
     new_img.paste(img1, (0, 0))
     new_img.paste(img2, (img1.width, 0))
 
     # Save the new image
-    new_img.save(os.path.join(target_folder, f'{image_id}.png'))
+    new_img.save(os.path.join(target_folder, f"{image_id}.png"))
 
-image_ids = []
-if not os.path.exists(os.path.join(current_file_dir, 'images/stitched')):
-    os.makedirs(os.path.join(current_file_dir, 'images/stitched'))
-    with open(os.path.join(current_file_dir, 'spotthediff.json'), 'r') as f:
-        train_data = json.load(f)
-        image_ids = [sample['id'] for sample in train_data]
-    for image_id in tqdm.tqdm(image_ids):
-        stitch_images(image_id)
 
+if __name__ == "__main__":
+    image_ids = []
+    if not os.path.exists(os.path.join(current_file_dir, "images/stitched")):
+        os.makedirs(os.path.join(current_file_dir, "images/stitched"))
+        with open(os.path.join(current_file_dir, "spotthediff.json"), "r") as f:
+            train_data = json.load(f)
+            image_ids = [sample["id"] for sample in train_data]
+        for image_id in tqdm.tqdm(image_ids):
+            stitch_images(image_id)
