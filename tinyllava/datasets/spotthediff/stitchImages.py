@@ -32,13 +32,21 @@ def stitch_images(
     # Save the new image
     new_img.save(os.path.join(target_folder, f"{image_id}.png"))
 
-
-if __name__ == "__main__":
-    image_ids = []
-    if not os.path.exists(os.path.join(current_file_dir, "images/stitched")):
-        os.makedirs(os.path.join(current_file_dir, "images/stitched"))
-        with open(os.path.join(current_file_dir, "spotthediff.json"), "r") as f:
+def stitch_images_for_dataset(data_path):
+        if not os.path.exists(os.path.join(current_file_dir, "images/stitched")):
+            os.makedirs(os.path.join(current_file_dir, "images/stitched"))
+        with open(os.path.join(current_file_dir, data_path), "r") as f:
             train_data = json.load(f)
             image_ids = [sample["id"] for sample in train_data]
         for image_id in tqdm.tqdm(image_ids):
             stitch_images(image_id)
+
+if __name__ == "__main__":
+    image_ids = []
+    train_data_path = os.path.join(current_file_dir, "spotthediff_train.json")
+    val_data_path = os.path.join(current_file_dir, "spotthediff_val.json")
+    test_data_path = os.path.join(current_file_dir, "spotthediff_test.json")
+    stitch_images_for_dataset(train_data_path)
+    stitch_images_for_dataset(val_data_path)
+    stitch_images_for_dataset(test_data_path)
+    

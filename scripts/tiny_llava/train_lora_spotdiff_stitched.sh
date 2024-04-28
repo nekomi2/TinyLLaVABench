@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Assign the arguments to variables
-DATA_PATH="tinyllava/datasets/spotthediff/spotthediff.json"
+DATA_PATH="tinyllava/datasets/spotthediff/spotthediff_train.json"
 IMAGE_PATH="tinyllava/datasets/spotthediff/images/stitched"
 OUTPUT_DIR="output/spotthediff_stitched"
 

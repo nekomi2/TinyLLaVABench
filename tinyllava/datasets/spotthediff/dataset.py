@@ -31,6 +31,8 @@ else:
 spotdiff_image_path = os.path.join(current_file_dir, 'images')
 spotdiff_data_path = os.path.join(current_file_dir, 'spotthediff.json')
 train_data_path = os.path.join(current_file_dir, 'spot-the-diff/data/annotations/train.json')
+val_data_path = os.path.join(current_file_dir, 'spot-the-diff/data/annotations/val.json')
+test_data_path = os.path.join(current_file_dir, 'spot-the-diff/data/annotations/test.json')
 
 # Description prompts (the same as provided by you)
 description_list = [
@@ -47,28 +49,32 @@ description_list = [
     "Describe what sets these two images apart."
 ]
 
-spotdiff_data = []
+def process_data(data_path, output_path):
+    print(f'generating json for {output_path}...')
+    with open(data_path, 'r') as f:
+        data = json.load(f)
+        spotdiff_data = []
+        for sample in tqdm.tqdm(data):
+            sample_dict = {
+                'id': sample['img_id'],
+                'image': f'{sample["img_id"]}.png'
+            }
+            sample_dict['conversations'] = [
+                {"from": "human", "value": "<image>\n" + random.choice(description_list)},
+                {"from": "gpt", "value": '\n'.join(sample['sentences'])}
+            ]
+            if sample_dict['conversations'][1]['value'] == "":
+                sample_dict['conversations'][1]['value'] = 'There are no differences between the images.'
+                
+            spotdiff_data.append(sample_dict)
 
-# Process the dataset
-# read the train data
-print('generating json...')
-with open(train_data_path, 'r') as f:
-    train_data = json.load(f)
-    for sample in tqdm.tqdm(train_data):
-        sample_dict = {
-            'id': sample['img_id'],
-            'image': f'{sample["img_id"]}.png'
-        }
-        sample_dict['conversations'] = [
-            {"from": "human", "value": "<image>\n" + random.choice(description_list)},
-            {"from": "gpt", "value": '\n'.join(sample['sentences'])}
-        ]
-        if sample_dict['conversations'][1]['value'] == "":
-            sample_dict['conversations'][1]['value'] = 'There are no differences between the images.'
-            
-        spotdiff_data.append(sample_dict)
+    # Dump data to a JSON file
+    with open(output_path, 'w') as f:
+        json.dump(spotdiff_data, f, indent=4)
+        print(f"SpotTheDiff dataset saved to {output_path}")
 
-# Dump data to a JSON file
-with open(spotdiff_data_path, 'w') as f:
-    json.dump(spotdiff_data, f, indent=4)
-    print(f"SpotTheDiff dataset saved to {spotdiff_data_path}")
+# Process each dataset
+if __name__ == '__main__':
+    process_data(train_data_path, os.path.join(current_file_dir, 'spotthediff_train.json'))
+    process_data(val_data_path, os.path.join(current_file_dir, 'spotthediff_val.json'))
+    process_data(test_data_path, os.path.join(current_file_dir, 'spotthediff_test.json'))
