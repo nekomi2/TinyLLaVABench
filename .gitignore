@@ -56,4 +56,7 @@ playground/
 # TinyLLaVABench
 
 tinyllava/datasets/flickr/image/*
+tinyllava/datasets/spotthediff/images/*
+tinyllava/datasets/spotthediff/spotthediff.json
 wandb/*
+

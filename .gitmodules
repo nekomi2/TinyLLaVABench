@@ -1,0 +1,3 @@
+[submodule "tinyllava/tinyllava/datasets/spotthediff/spot-the-diff"]
+	path = tinyllava/tinyllava/datasets/spotthediff/spot-the-diff
+	url = https://github.com/harsh19/spot-the-diff
