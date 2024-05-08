@@ -8,7 +8,7 @@ current_file_dir = os.path.dirname(__file__)
 train_data_path = os.path.join(current_file_dir, 'spot-the-diff/data/annotations/train.json')
 val_data_path = os.path.join(current_file_dir, 'spot-the-diff/data/annotations/val.json')
 test_data_path = os.path.join(current_file_dir, 'spot-the-diff/data/annotations/test.json')
-output_path = os.path.join(current_file_dir, 'spotthediff_train_v6.json')
+output_path = os.path.join(current_file_dir, 'spotthediff_train_v7.json')
 
 # Description prompts
 description_list = [
@@ -28,7 +28,7 @@ def process_data(data_path, output_path):
                 'images': [f'{img_base}.png', f'{img_base}_2.png']
             }
             sample_dict['conversations'] = [
-                {"from": "human", "value": "<image>\n<image>\n" + random.choice(description_list)},
+                {"from": "human", "value": "<image>\n" + random.choice(description_list)},
                 {"from": "gpt", "value": ('\n'.join(sample['sentences']) + '\n') if sample['sentences'][0] != "" else 'There are no differences between the images.\n'}
             ]
             spotdiff_data.append(sample_dict)
@@ -40,5 +40,3 @@ def process_data(data_path, output_path):
 
 if __name__ == '__main__':
     process_data(train_data_path, output_path)
-    process_data(val_data_path, os.path.join(current_file_dir, 'spotthediff_val_v6.json'))
-    process_data(test_data_path, os.path.join(current_file_dir, 'spotthediff_test_v6.json'))
